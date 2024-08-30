@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRouter = require("./Routes/userRoute"); // Adjust path as necessary
-const friendRequestRouter = require('./Routes/friendRequestRoutes'); // Ensure the correct path is used
+const friendRequestRouter = require('./Routes/friendRequestRoute'); // Ensure the correct path is used
 require("dotenv").config();
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(cors()); // Middleware to enable CORS
 
 // Routes
 app.use("/api/users", userRouter); // Mount the userRouter at /api/users
-app.use("/api/friends", friendRequestRouter); // Mount the friendRequestRouter at /api/friends
+app.use("/api/friendrequests", friendRequestRouter); // Mount the friendRequestRouter at /api/friends
 
 // Basic Route
 app.get("/", (req, res) => {

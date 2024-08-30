@@ -1,15 +1,47 @@
-const FriendRequest = require('./models/FriendRequest'); // Adjust path as needed
-const User = require('./models/User'); // Adjust path as needed
+const FriendRequest = require('../Models/FriendRequestModel'); // Adjust path as needed
+const User = require('../Models/userModel'); // Adjust path as needed
 
 // Send a friend request
 const sendFriendRequest = async (req, res) => {
   try {
     const { senderId, receiverId } = req.body;
 
-    // Check if the friend request already exists
-    const existingRequest = await FriendRequest.findOne({ sender: senderId, receiver: receiverId });
+    // Check if users are already friends
+    const sender = await User.findById(senderId);
+    const receiver = await User.findById(receiverId);
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ message: 'One or both users not found' });
+    }
+
+    if (sender.friends.includes(receiverId) || receiver.friends.includes(senderId)) {
+      return res.status(400).json({ message: 'Users are already friends' });
+    }
+
+    // Check if a friend request already exists
+    const existingRequest = await FriendRequest.findOne({
+      sender: senderId,
+      receiver: receiverId
+    });
+
     if (existingRequest) {
-      return res.status(400).json({ message: 'Friend request already sent' });
+      if (existingRequest.status === 'pending') {
+        return res.status(400).json({ message: 'Friend request already sent' });
+      } else if (existingRequest.status === 'accepted') {
+        return res.status(400).json({ message: 'Users are already friends' });
+      }
+    }
+
+    // Check if a previous request was declined
+    const declinedRequest = await FriendRequest.findOne({
+      sender: senderId,
+      receiver: receiverId,
+      status: 'declined'
+    });
+
+    if (declinedRequest) {
+      // Remove the declined request to allow a new one
+      await FriendRequest.deleteOne({ _id: declinedRequest._id });
     }
 
     // Create a new friend request
@@ -22,6 +54,7 @@ const sendFriendRequest = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Accept a friend request
 const acceptFriendRequest = async (req, res) => {

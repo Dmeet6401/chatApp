@@ -5,7 +5,7 @@ const {
   acceptFriendRequest,
   declineFriendRequest,
   getPendingFriendRequests,
-} = require('./controllers/friendRequestController'); // Adjust path as needed
+} = require('../Controllers/friendRequestController'); // Adjust path as needed
 
 // Route to send a friend request
 router.post('/send', sendFriendRequest);
