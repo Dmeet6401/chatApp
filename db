@@ -1,0 +1,17 @@
++-------------------+        +-------------------+        +-------------------+        +-------------------+
+|      User         |        |   FriendRequest   |        |       Chat        |        |       Call        |
++-------------------+        +-------------------+        +-------------------+        +-------------------+
+| _id: ObjectId     |<-----+ | _id: ObjectId     |        | _id: ObjectId     |        | _id: ObjectId     |
+| firstName: String |      | | sender: ObjectId  |<-----+ | participants:     |<-----+ | caller: ObjectId  |
+| lastName: String  |      | | receiver: ObjectId|      | | [ObjectId,        |      | | receiver: ObjectId|
+| dob: Date         |      | | status: String    |      | | ObjectId]         |      | | callType: String  |
+| email: String     |      | | createdAt: Date   |      | | messages: [       |      | | duration: Number  |
+| username: String  |      | +-------------------+      | | {                 |      | | timestamp: Date   |
+| password: String  |      |                               |  sender: ObjectId, |      | +-------------------+
+| friends: [        |                                    |  content: String,  |
+|  ObjectId,        |                                    |  timestamp: Date   |
+|  ObjectId         |                                    | },                 |
+| ]                 |                                    | ... ]              |
+| createdAt: Date   |                                    | createdAt: Date    |
+| updatedAt: Date   |                                    +-------------------+
++-------------------+        
